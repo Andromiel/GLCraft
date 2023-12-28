@@ -19,6 +19,7 @@ GLFWwindow* SeOpenGLContext(int width, int height) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
+
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(width, height, "Hello World", NULL, NULL);
     if (!window)
@@ -27,6 +28,8 @@ GLFWwindow* SeOpenGLContext(int width, int height) {
         return nullptr;
     }
 
+    //glfwSetKeyCallback(window, keyCallback);
+    glfwSetInputMode(window, GLFW_STICKY_KEYS, true);
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
