@@ -8,7 +8,7 @@ out vec4 vertexColor; // specify a color output to the fragment shader
 
 void main()
 {
-    gl_Position = matrix *vec4(aPos, 1.0); // see how we directly give a vec2 to vec4's constructor
+    gl_Position = matrix * vec4(aPos, 1.0); // see how we directly give a vec2 to vec4's constructor
     vertexColor = gl_Position; // set the output variable to a dark-red color
 }
 
