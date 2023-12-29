@@ -156,6 +156,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="GameStructure\World.cpp" />
     <ClCompile Include="GL Craft.cpp" />
     <ClCompile Include="Shader.h" />
   </ItemGroup>
@@ -163,8 +165,14 @@
     <None Include="shaders.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameStructure\Block.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="GameStructure\Chunk.h" />
+    <ClInclude Include="GameStructure\Chunkmap.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Context.h" />
+    <ClInclude Include="GameStructure\PlayerInfo.h" />
+    <ClInclude Include="GameStructure\World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

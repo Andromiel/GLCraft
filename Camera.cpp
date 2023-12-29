@@ -18,7 +18,7 @@ Camera::Camera(int camWidth, int camHeight) {
 	_fov = glm::radians(90.0f);
 	_aspect = (float) camWidth / (float)camHeight;
 	_near = 0.01f;
-	_far = 100.0f;
+	_far = 1000.0f;
 }
 
 void Camera::setPosition(vec3 position) {
@@ -34,7 +34,6 @@ void Camera::moveLocal(vec3 position) {
 }
 
 void Camera::setRotation(vec3 rotation) {
-	rotation /= 180;
 	quat xQuat = angleAxis(rotation.x, vec3(1, 0, 0));
 	quat yQuat = angleAxis(rotation.y, vec3(0, 1, 0));
 	quat zQuat = angleAxis(rotation.z, vec3(0, 0, 1));

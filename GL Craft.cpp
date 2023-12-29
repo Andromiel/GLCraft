@@ -81,29 +81,30 @@ int main(void)
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE))
     {
+        float movingspeed = 0.001f;
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
             //center = center + glm::vec3(eye) * 0.001f;
-            camera->moveLocal(vec3(0, 0, 0.01f));
+            camera->moveLocal(vec3(0, 0, movingspeed));
         }
         if (glfwGetKey(window, GLFW_KEY_S)) {
             //center = center + glm::vec3(eye) * -0.001f;
-            camera->moveLocal(vec3(0, 0, -0.01f));
+            camera->moveLocal(vec3(0, 0, -movingspeed));
         }
         if (glfwGetKey(window, GLFW_KEY_A)) {
             //center = center + glm::vec3(-eye.z, eye.y, eye.x) * -0.001f;
-            camera->moveLocal(vec3(-0.01f, 0, 0));
+            camera->moveLocal(vec3(-movingspeed, 0, 0));
         }
         if (glfwGetKey(window, GLFW_KEY_D)) {
             //center = center + glm::vec3(eye.z, eye.y, -eye.x) * -0.001f;
-            camera->moveLocal(vec3(0.01f, 0, 0));
+            camera->moveLocal(vec3(movingspeed, 0, 0));
         }
         if (glfwGetKey(window, GLFW_KEY_SPACE)) {
             //center = center + glm::vec3(0, 1, 0) * 0.001f;
-            camera->moveLocal(vec3(0, 0.01f, 0));
+            camera->moveLocal(vec3(0, movingspeed, 0));
         }
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT)) {
             //center = center - glm::vec3(0, 1, 0) * 0.001f;
-            camera->moveLocal(vec3(0, -0.01f, 0));
+            camera->moveLocal(vec3(0, -movingspeed, 0));
         }
         glfwGetCursorPos(window, &mouseX, &mouseY);
         orientationX += mouseX - WIDTH / 2.0f;
@@ -111,7 +112,8 @@ int main(void)
 
         glfwSetCursorPos(window, WIDTH/2.0f, HEIGHT/2.0f);
 
-        camera->setRotation(vec3(glm::radians((float)orientationY), glm::radians((float)orientationX), 0));
+        float angularMovingSpeed = 1.0f;
+        camera->setRotation(vec3(glm::radians((float)orientationY * angularMovingSpeed), glm::radians((float)orientationX * angularMovingSpeed), 0));
         mvp = camera->getProjectionMatrix() * camera->getTransformationMatrix() * model;
         glUniformMatrix4fv(location, 1, GL_FALSE, &mvp[0][0]);
 
