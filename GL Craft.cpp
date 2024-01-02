@@ -15,7 +15,14 @@
 
 #include <iostream>
 
-#include "Shader.h"
+#include "Rendering/Shader.h"
+#include "Rendering/Renderer.h"
+#include "Rendering/VertexBuffer.h"
+#include "Rendering/IndexBuffer.h"
+#include "Rendering/Texture.h"
+
+
+
 
 
 const int WIDTH = 700;
@@ -23,45 +30,50 @@ const int HEIGHT = 700;
 
 int main(void)
 {
-    GLFWwindow* window = SeOpenGLContext(WIDTH, HEIGHT);
-    if (window == nullptr) {
-        std::cout << "An error has occurred while creating Opengl context" << std::endl;
-    }
+    Renderer renderer(WIDTH, HEIGHT);
+    
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
 
-    GLuint vertexArrayID;
-    glGenVertexArrays(1, &vertexArrayID);
-    glBindVertexArray(vertexArrayID);
-
+    float tex_id = (256-8);
     std::vector<float> vertices = {
-        0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0,
-        1.0, 1.0, 0.0,
-        1.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, tex_id,
+        0.0, 1.0, 0.0, tex_id,
+        1.0, 1.0, 0.0, tex_id,
+        1.0, 0.0, 0.0, tex_id,
 
-        0.0, 0.0, 1.0,
-        0.0, 1.0, 1.0,
-        1.0, 1.0, 1.0,
-        1.0, 0.0, 1.0
+        0.0, 0.0, 1.0, tex_id,
+        0.0, 1.0, 1.0, tex_id,
+        1.0, 1.0, 1.0, tex_id,
+        1.0, 0.0, 1.0, tex_id
     };
 
-    GLuint vertexBufferID;
-    glGenBuffers(1, &vertexBufferID);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferID);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glEnableVertexAttribArray(0);
-
+    float* newdatatest;
+    
+    VertexBuffer vbo(vertices.size(), vertices.data());
+    VertexBufferLayout layout;
+    layout.Push<float>(3);
+    layout.Push<float>(1);
+    vbo.SetLayout(layout);
+    //std::vector<float> newdata = { 0, 0, 45.0 };
+    //glBufferSubData(GL_ARRAY_BUFFER, sizeof(float)*3*4, sizeof(float)*3, newdata.data());
+    //newdatatest = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+    //std::cout << newdatatest[14] << std::endl;
+    //newdatatest[14] = 12.0f;
+    //glUnmapBuffer(GL_ARRAY_BUFFER);
+    vbo.Bind();
 
     std::vector<unsigned int> indices = {0, 1, 2, 2, 3, 0, 4, 5, 6, 6, 7, 4};
-    GLuint indexBufferID;
-    glGenBuffers(1, &indexBufferID);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
 
-    std::vector shaders = ParseShaders("shaders.shader");
-    unsigned int shader = CreateShader(shaders[0], shaders[1]);
-    glUseProgram(shader);
+    IndexBuffer ibo(indices.size(), indices.data());
+    ibo.Bind();
 
+    
+
+    renderer.SetShaders("shaders.shader");
+
+    Texture2DArray texture("C:/Visual Studio Projects/GL Craft Efrei/GL Craft/GameStructure/game_materials/atlas.png");
     glm::mat4 model = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, -1.0)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0));
     
 
@@ -70,8 +82,8 @@ int main(void)
     camera->setRotation(vec3(0.0f, 45.0f, 0.0f));
 
     glm::mat4 mvp = camera->getProjectionMatrix() * camera->getTransformationMatrix() * model;
-    int location = glGetUniformLocation(shader, "matrix");
-    glUniformMatrix4fv(location, 1, GL_FALSE, &camera->getTransformationMatrix()[0][0]);
+
+    renderer.LinkAndSetUniform(UNIFORM_TYPE::MAT4, "matrix", &camera->getTransformationMatrix()[0][0]);
 
     glCheckError();
 
@@ -79,54 +91,54 @@ int main(void)
     double orientationX = 0, orientationY = 0;
 
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE))
+    while (!renderer.CloseWindow())
     {
         float movingspeed = 0.001f;
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        if (glfwGetKey(renderer.GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
             //center = center + glm::vec3(eye) * 0.001f;
             camera->moveLocal(vec3(0, 0, movingspeed));
         }
-        if (glfwGetKey(window, GLFW_KEY_S)) {
+        if (glfwGetKey(renderer.GetWindow(), GLFW_KEY_S)) {
             //center = center + glm::vec3(eye) * -0.001f;
             camera->moveLocal(vec3(0, 0, -movingspeed));
         }
-        if (glfwGetKey(window, GLFW_KEY_A)) {
+        if (glfwGetKey(renderer.GetWindow(), GLFW_KEY_A)) {
             //center = center + glm::vec3(-eye.z, eye.y, eye.x) * -0.001f;
             camera->moveLocal(vec3(-movingspeed, 0, 0));
         }
-        if (glfwGetKey(window, GLFW_KEY_D)) {
+        if (glfwGetKey(renderer.GetWindow(), GLFW_KEY_D)) {
             //center = center + glm::vec3(eye.z, eye.y, -eye.x) * -0.001f;
             camera->moveLocal(vec3(movingspeed, 0, 0));
         }
-        if (glfwGetKey(window, GLFW_KEY_SPACE)) {
+        if (glfwGetKey(renderer.GetWindow(), GLFW_KEY_SPACE)) {
             //center = center + glm::vec3(0, 1, 0) * 0.001f;
             camera->moveLocal(vec3(0, movingspeed, 0));
         }
-        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT)) {
+        if (glfwGetKey(renderer.GetWindow(), GLFW_KEY_LEFT_SHIFT)) {
             //center = center - glm::vec3(0, 1, 0) * 0.001f;
             camera->moveLocal(vec3(0, -movingspeed, 0));
         }
-        glfwGetCursorPos(window, &mouseX, &mouseY);
+        glfwGetCursorPos(renderer.GetWindow(), &mouseX, &mouseY);
         orientationX += mouseX - WIDTH / 2.0f;
         orientationY += mouseY - HEIGHT / 2.0f;
 
-        glfwSetCursorPos(window, WIDTH/2.0f, HEIGHT/2.0f);
+        glfwSetCursorPos(renderer.GetWindow(), WIDTH/2.0f, HEIGHT/2.0f);
 
         float angularMovingSpeed = 1.0f;
         camera->setRotation(vec3(glm::radians((float)orientationY * angularMovingSpeed), glm::radians((float)orientationX * angularMovingSpeed), 0));
         mvp = camera->getProjectionMatrix() * camera->getTransformationMatrix() * model;
-        glUniformMatrix4fv(location, 1, GL_FALSE, &mvp[0][0]);
+        renderer.ResetUniform(&mvp[0][0]);
 
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        renderer.ClearWindow();
         //glClearColor(0.0, 1.0, 0.0, 1.0);
 
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
+        renderer.Draw(indices);
         
         /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        renderer.SwapBuffers();
         /* Poll for and process events */
-        glfwPollEvents();
+        renderer.PollEvents();
     }
 
     glfwTerminate();
