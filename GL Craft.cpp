@@ -83,7 +83,7 @@ int main(void)
 
     glm::mat4 mvp = camera->getProjectionMatrix() * camera->getTransformationMatrix() * model;
 
-    renderer.LinkAndSetUniform(UNIFORM_TYPE::MAT4, "matrix", &camera->getTransformationMatrix()[0][0]);
+    renderer.LinkAndSetUniform(UNIFORM_TYPE::MAT4, "matrix", &mvp);
 
     glCheckError();
 
@@ -93,7 +93,7 @@ int main(void)
     /* Loop until the user closes the window */
     while (!renderer.CloseWindow())
     {
-        float movingspeed = 0.001f;
+        float movingspeed = 0.01f;
         if (glfwGetKey(renderer.GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
             //center = center + glm::vec3(eye) * 0.001f;
             camera->moveLocal(vec3(0, 0, movingspeed));
@@ -124,10 +124,10 @@ int main(void)
 
         glfwSetCursorPos(renderer.GetWindow(), WIDTH/2.0f, HEIGHT/2.0f);
 
-        float angularMovingSpeed = 1.0f;
+        float angularMovingSpeed = 0.1f;
         camera->setRotation(vec3(glm::radians((float)orientationY * angularMovingSpeed), glm::radians((float)orientationX * angularMovingSpeed), 0));
         mvp = camera->getProjectionMatrix() * camera->getTransformationMatrix() * model;
-        renderer.ResetUniform(&mvp[0][0]);
+        renderer.ResetUniform(&mvp);
 
         /* Render here */
         renderer.ClearWindow();
