@@ -5,7 +5,7 @@
 
 using namespace glm;
 
-class Camera : SpaceIdentity
+class Camera : public SpaceIdentity
 {
 public:
 	Camera(int camWidth, int camHeight);
