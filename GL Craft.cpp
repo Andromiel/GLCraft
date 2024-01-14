@@ -107,8 +107,8 @@ int main(void)
     mesh2->setIndices(cubeIndices);
 
     SpaceIdentity* cubeTransformation = new SpaceIdentity();
-    cubeTransformation->setPosition(vec3(0, 10, 0));
-    cubeTransformation->setRotation(vec3(25, 0, 25));
+    cubeTransformation->setPosition(vec3(0, 0, 0));
+    cubeTransformation->setRotation(vec3(0, 0, 0));
 
 
     
@@ -119,8 +119,8 @@ int main(void)
     
 
     Camera *camera = new Camera(WIDTH, HEIGHT);
-    camera->moveAbsolute(vec3(0.0f, 0.0f, -1.0f));
-    camera->setRotation(vec3(0.0f, 45.0f, 0.0f));
+    camera->setPosition(vec3(0.0f, 0.0f, 1.0f));
+    camera->setRotation(vec3(0.0f, 0.0f, 0.0f));
 
     glm::mat4 vp = camera->getProjectionMatrix() * camera->getTransformationMatrix();
 
@@ -130,10 +130,12 @@ int main(void)
 
     double mouseX, mouseY;
     double orientationX = 0, orientationY = 0;
+    int y = 0;
 
     /* Loop until the user closes the window */
     while (!renderer->CloseWindow())
     {
+        y++;
         float movingspeed = -0.01f;
         if (glfwGetKey(renderer->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
             //center = center + glm::vec3(eye) * 0.001f;
@@ -174,8 +176,13 @@ int main(void)
         renderer->ClearWindow();
         //glClearColor(0.0, 1.0, 0.0, 1.0);
 
-        mat4 mvp = renderer->GetCameraMatrix() * cubeTransformation->getTransformationMatrix();
-        mesh2->Draw(renderer, &mvp);
+        cubeTransformation->setScale(vec3(0.5, 0.5, 0.5));
+        for (int i = 0; i < 10; i++) {
+            cubeTransformation->setPosition(vec3(i-5, sin(radians((float) y + 10 * i)), 2.0));
+            mat4 mvp = renderer->GetCameraMatrix() * cubeTransformation->getTransformationMatrix();
+            mesh2->Draw(renderer, &mvp);
+            
+        }
         
         /* Swap front and back buffers */
         renderer->SwapBuffers();
