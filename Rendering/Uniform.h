@@ -20,37 +20,7 @@ public:
 	Uniform operator=(const Uniform&) = delete;
 	~Uniform();
 
-	void LinkUniform(std::string name, unsigned int shader);
-	void SetUniform(UNIFORM_TYPE type, void* data);
+	void LinkUniform(std::string name, UNIFORM_TYPE type, unsigned int shader);
+	void SetUniform(void* data);
 	UNIFORM_TYPE GetType();
 };
-
-Uniform::Uniform() {
-
-}
-
-Uniform::Uniform(std::string name, unsigned int shader) : _name(name), _location(glGetUniformLocation(shader, name.c_str())) {
-	
-}
-
-Uniform::~Uniform() {
-
-}
-
-void Uniform::LinkUniform(std::string name, unsigned int shader) {
-	_name = name;
-	_location = glGetUniformLocation(shader, _name.c_str());
-}
-
-
-void Uniform::SetUniform(UNIFORM_TYPE type, void* data) {
-	switch (type) {
-	case UNIFORM_TYPE::MAT4 :
-		glUniformMatrix4fv(_location, 1, GL_FALSE, (float*)data);
-		_type = type;
-	}
-}
-
-UNIFORM_TYPE Uniform::GetType() {
-	return _type;
-}

@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 
-GLenum glCheckError_(const char* file, int line)
+static GLenum glCheckError_(const char* file, int line)
 {
     GLenum errorCode;
     while ((errorCode = glGetError()) != GL_NO_ERROR)
@@ -28,7 +28,7 @@ GLenum glCheckError_(const char* file, int line)
 #define glCheckError() glCheckError_(__FILE__, __LINE__) 
 
 
-void APIENTRY glDebugOutput(GLenum source,
+static void APIENTRY glDebugOutput(GLenum source,
     GLenum type,
     unsigned int id,
     GLenum severity,

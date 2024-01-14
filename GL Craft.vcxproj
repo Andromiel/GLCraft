@@ -43,7 +43,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -157,12 +157,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="GameStructure\Chunk.cpp" />
+    <ClCompile Include="GameStructure\Chunkmap.cpp" />
     <ClCompile Include="GameStructure\World.cpp" />
     <ClCompile Include="GL Craft.cpp" />
-    <ClCompile Include="Shader.h" />
-    <ClCompile Include="SpaceIdentity.cpp" />
+    <ClCompile Include="Rendering\Mesh.cpp" />
+    <ClCompile Include="Rendering\IndexBuffer.cpp" />
+    <ClCompile Include="Rendering\Renderer.cpp" />
+    <ClCompile Include="Rendering\res\stb_image.cpp" />
+    <ClCompile Include="Rendering\Uniform.cpp" />
+    <ClCompile Include="Rendering\VertexBuffer.cpp" />
+    <ClCompile Include="Rendering\VertexBufferLayout.cpp" />
+    <ClCompile Include="GameStructure\SpaceIdentity.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="README.md" />
     <None Include="shaders.shader" />
   </ItemGroup>
   <ItemGroup>
@@ -174,7 +185,19 @@
     <ClInclude Include="Context.h" />
     <ClInclude Include="GameStructure\PlayerInfo.h" />
     <ClInclude Include="GameStructure\World.h" />
-    <ClInclude Include="SpaceIdentity.h" />
+    <ClInclude Include="Rendering\Mesh.h" />
+    <ClInclude Include="Rendering\IndexBuffer.h" />
+    <ClInclude Include="Rendering\Renderer.h" />
+    <ClInclude Include="Rendering\res\stb_image.h" />
+    <ClInclude Include="Rendering\Shader.h" />
+    <ClInclude Include="Rendering\Texture.h" />
+    <ClInclude Include="Rendering\Uniform.h" />
+    <ClInclude Include="Rendering\VertexBuffer.h" />
+    <ClInclude Include="Rendering\VertexBufferLayout.h" />
+    <ClInclude Include="GameStructure\SpaceIdentity.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="GameStructure\game_materials\atlas.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

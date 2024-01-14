@@ -2,6 +2,7 @@
 
 #include <glm/vec3.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/mat4x4.hpp>
 
 using namespace glm;
 
@@ -12,15 +13,15 @@ SpaceIdentity::SpaceIdentity() {
 }
 
 void SpaceIdentity::setPosition(vec3 position) {
-	_position = -position * vec3(1, 1, -1);
+	_position = position * vec3(1, 1, -1);
 }
 
 void SpaceIdentity::moveAbsolute(vec3 position) {
-	_position += -position * vec3(1, 1, -1);
+	_position += position * vec3(1, 1, -1);
 }
 
 void SpaceIdentity::moveLocal(vec3 position) {
-	_position += (-position * vec3(1, 1, -1)) * _rotation;
+	_position += (position * vec3(1, 1, -1)) * _rotation;
 }
 
 void SpaceIdentity::setRotation(vec3 rotation) {
@@ -52,5 +53,9 @@ quat SpaceIdentity::getRotation() {
 
 vec3 SpaceIdentity::getScale() {
 	return _scale;
+}
+
+mat4 SpaceIdentity::getTransformationMatrix() {
+	return mat4_cast(_rotation) * glm::scale(mat4(1), _scale) * glm::translate(mat4(1), _position);
 }
 
