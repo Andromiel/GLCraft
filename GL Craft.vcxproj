@@ -43,7 +43,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -156,19 +156,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameStructure\Block.cpp" />
+    <ClCompile Include="GameStructure\BlockRegistry.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GameStructure\Chunk.cpp" />
     <ClCompile Include="GameStructure\Chunkmap.cpp" />
     <ClCompile Include="GameStructure\World.cpp" />
     <ClCompile Include="GL Craft.cpp" />
+    <ClCompile Include="GameStructure\Registry.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\Renderer.cpp" />
     <ClCompile Include="Rendering\res\stb_image.cpp" />
     <ClCompile Include="Rendering\Uniform.cpp" />
-    <ClCompile Include="Rendering\VertexBuffer.cpp" />
+    <ClCompile Include="Rendering\VertexBuffers.cpp" />
     <ClCompile Include="Rendering\VertexBufferLayout.cpp" />
     <ClCompile Include="GameStructure\SpaceIdentity.cpp" />
+    <ClCompile Include="GameStructure\WorldGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
@@ -177,6 +181,7 @@
     <None Include="shaders.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameStructure\BlockRegistry.h" />
     <ClInclude Include="GameStructure\Block.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="GameStructure\Chunk.h" />
@@ -185,6 +190,8 @@
     <ClInclude Include="Context.h" />
     <ClInclude Include="GameStructure\PlayerInfo.h" />
     <ClInclude Include="GameStructure\World.h" />
+    <ClInclude Include="GameStructure\Registry.h" />
+    <ClInclude Include="GameStructure\Orientation.h" />
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />
     <ClInclude Include="Rendering\Renderer.h" />
@@ -192,9 +199,10 @@
     <ClInclude Include="Rendering\Shader.h" />
     <ClInclude Include="Rendering\Texture.h" />
     <ClInclude Include="Rendering\Uniform.h" />
-    <ClInclude Include="Rendering\VertexBuffer.h" />
+    <ClInclude Include="Rendering\VertexBuffers.h" />
     <ClInclude Include="Rendering\VertexBufferLayout.h" />
     <ClInclude Include="GameStructure\SpaceIdentity.h" />
+    <ClInclude Include="GameStructure\WorldGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="GameStructure\game_materials\atlas.png" />

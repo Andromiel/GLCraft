@@ -7,6 +7,7 @@
 struct LayoutElement {
 	int count;
 	int type;
+	unsigned int vbo;
 };
 
 class VertexBufferLayout {
@@ -26,13 +27,13 @@ public:
 	int GetSize(int type);
 
 	template<typename T>
-	void Push(int count);
+	void Push(int count, unsigned int vboToBind);
 
 	template<> 
-	void Push<int>(int count);
+	void Push<int>(int count, unsigned int vboToBind);
 	template<>
-	void Push<float>(int count);
+	void Push<float>(int count, unsigned int vboToBind);
 	template<>
-	void Push<unsigned int>(int count);
+	void Push<unsigned int>(int count, unsigned int vboToBind);
 
 };

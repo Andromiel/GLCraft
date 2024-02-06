@@ -49,6 +49,8 @@ Renderer::Renderer(int width, int height) {
     _window = window;
 
     _cameraMatrix = mat4();
+    previousTime = glfwGetTime();
+    deltaTime = 0;
 }
 
 Renderer::~Renderer() {
@@ -112,8 +114,19 @@ void Renderer::ResetUniform(std::string name, void* data)
 
 void Renderer::SwapBuffers() {
     glfwSwapBuffers(_window);
+    double currentTime = glfwGetTime();
+    deltaTime = currentTime - previousTime;
+    previousTime = currentTime;
 }
 
 void Renderer::PollEvents() {
     glfwPollEvents();
+}
+
+double Renderer::GetFrameDeltaTime() {
+    return deltaTime;
+}
+
+double Renderer::GetTime() {
+    return previousTime;
 }

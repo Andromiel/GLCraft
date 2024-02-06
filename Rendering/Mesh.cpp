@@ -2,37 +2,32 @@
 
 Mesh::Mesh()
 {
-	vertexBuffer = new VertexBuffer();
+	vertexBuffers = new VertexBuffers();
+	verticesPosVBO = vertexBuffers->AddBuffer<float>(3);
+
 	indexBuffer = new IndexBuffer();
 }
 
 Mesh::~Mesh()
 {
 	delete indexBuffer;
-	delete vertexBuffer;
+	delete vertexBuffers;
 }
 
-void Mesh::setVertices(vector<float> vertices)
+void Mesh::setVertices(vector<vec3>* vertices)
 {
-	VertexBufferLayout* layout = new VertexBufferLayout();
-	layout->Push<float>(3);
-	setVertices(vertices, layout);
+	vector<float>* verticesFlatten = reinterpret_cast<vector<float>*>(vertices);
+	vertexBuffers->BufferData<float>(verticesFlatten->size(), verticesFlatten->data(), verticesPosVBO);
 }
 
-void Mesh::setVertices(vector<float> vertices, VertexBufferLayout* layout)
+void Mesh::setIndices(vector<unsigned int>* indices)
 {
-	vertexBuffer->BufferData(vertices.size() * sizeof(float), vertices.data());
-	vertexBuffer->SetLayout(layout);
-}
-
-void Mesh::setIndices(vector<unsigned int> indices)
-{
-	indexBuffer->BufferData(indices.size(), indices.data());
+	indexBuffer->BufferData(indices->size(), indices->data());
 }
 
 void Mesh::Draw(Renderer* renderer, mat4* transformation)
 {
-	vertexBuffer->Bind();
+	vertexBuffers->BindLayout();
 	indexBuffer->Bind();
 	renderer->ResetUniform("matrix", transformation);
 	renderer->Draw(indexBuffer->GetSize());

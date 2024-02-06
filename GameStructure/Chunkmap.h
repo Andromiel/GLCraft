@@ -10,10 +10,6 @@
 
 #include "Chunk.h"
 
-static SOLID_BLOCK_TYPES NoiseFunc(glm::ivec3 block, glm::ivec3 chunk) {
-	return SOLID_BLOCK_TYPES::AIR;
-}
-
 struct Chunkmap {//coordinates are relative to chunks (for example (0, 0) or (57, -14) etc)
 private:
 	std::unordered_map<glm::ivec3, Chunk> _map;

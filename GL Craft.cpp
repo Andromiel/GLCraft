@@ -17,12 +17,14 @@
 
 #include "Rendering/Shader.h"
 #include "Rendering/Renderer.h"
-#include "Rendering/VertexBuffer.h"
+#include "Rendering/VertexBuffers.h"
 #include "Rendering/IndexBuffer.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Mesh.h"
 
-
+#include "GameStructure/BlockRegistry.h"
+#include "GameStructure/WorldGenerator.h"
+#include "GameStructure/Chunk.h"
 
 
 
@@ -38,24 +40,21 @@ int main(void)
     glBindVertexArray(vao);
 
     float tex_id = (256-8);
-    std::vector<float> vertices = {
-        0.0, 0.0, 0.0, tex_id,
-        0.0, 1.0, 0.0, tex_id,
-        1.0, 1.0, 0.0, tex_id,
-        1.0, 0.0, 0.0, tex_id,
+    std::vector<vec3> vertices = {
+        vec3(0.0, 0.0, 0.0),
+        vec3(0.0, 1.0, 0.0),
+        vec3(1.0, 1.0, 0.0),
+        vec3(1.0, 0.0, 0.0),
 
-        0.0, 0.0, 1.0, tex_id,
-        0.0, 1.0, 1.0, tex_id,
-        1.0, 1.0, 1.0, tex_id,
-        1.0, 0.0, 1.0, tex_id
+        vec3(0.0, 0.0, 1.0),
+        vec3(0.0, 1.0, 1.0),
+        vec3(1.0, 1.0, 1.0),
+        vec3(1.0, 0.0, 1.0)
     };
 
     float* newdatatest;
     
     //VertexBuffer vbo(vertices.size(), vertices.data());
-    VertexBufferLayout* layout = new VertexBufferLayout();
-    layout->Push<float>(3);
-    layout->Push<float>(1);
     //vbo.SetLayout(layout);
     //std::vector<float> newdata = { 0, 0, 45.0 };
     //glBufferSubData(GL_ARRAY_BUFFER, sizeof(float)*3*4, sizeof(float)*3, newdata.data());
@@ -72,19 +71,19 @@ int main(void)
 
 
     Mesh* mesh = new Mesh();
-    mesh->setVertices(vertices, layout);
-    mesh->setIndices(indices);
+    mesh->setVertices(&vertices);
+    mesh->setIndices(&indices);
 
 
-    std::vector<float> cubeVertices = {
-        0.0, 0.0, 0.0, tex_id,
-        1.0, 0.0, 0.0, tex_id,
-        1.0, 0.0, 1.0, tex_id,
-        0.0, 0.0, 1.0, tex_id,
-        0.0, 1.0, 0.0, tex_id,
-        1.0, 1.0, 0.0, tex_id,
-        1.0, 1.0, 1.0, tex_id,
-        0.0, 1.0, 1.0, tex_id
+    std::vector<vec3> cubeVertices = {
+        vec3(0.0, 0.0, 0.0),
+        vec3(1.0, 0.0, 0.0),
+        vec3(1.0, 0.0, 1.0),
+        vec3(0.0, 0.0, 1.0),
+        vec3(0.0, 1.0, 0.0),
+        vec3(1.0, 1.0, 0.0),
+        vec3(1.0, 1.0, 1.0),
+        vec3(0.0, 1.0, 1.0)
     };
 
     std::vector<unsigned int> cubeIndices = {
@@ -103,8 +102,8 @@ int main(void)
     };
 
     Mesh* mesh2 = new Mesh();
-    mesh2->setVertices(cubeVertices, layout);
-    mesh2->setIndices(cubeIndices);
+    mesh2->setVertices(&cubeVertices);
+    mesh2->setIndices(&cubeIndices);
 
     SpaceIdentity* cubeTransformation = new SpaceIdentity();
     cubeTransformation->setPosition(vec3(0, 0, 0));
@@ -132,11 +131,19 @@ int main(void)
     double orientationX = 0, orientationY = 0;
     int y = 0;
 
+    Chunk* chunk = new Chunk();
+    chunk->FillChunk(WorldGenerator::Generate);
+    chunk->GenerateMesh();
+
+    SpaceIdentity* chunkPos = new SpaceIdentity();
+
     /* Loop until the user closes the window */
     while (!renderer->CloseWindow())
     {
+        double deltaTime = renderer->GetFrameDeltaTime();
+
         y++;
-        float movingspeed = -0.01f;
+        float movingspeed = -1.0f * deltaTime;
         if (glfwGetKey(renderer->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
             //center = center + glm::vec3(eye) * 0.001f;
             camera->moveLocal(vec3(0, 0, movingspeed));
@@ -176,13 +183,21 @@ int main(void)
         renderer->ClearWindow();
         //glClearColor(0.0, 1.0, 0.0, 1.0);
 
+        mat4 mvp;
+
+        float cubeSpeed = 100;
         cubeTransformation->setScale(vec3(0.5, 0.5, 0.5));
         for (int i = 0; i < 10; i++) {
-            cubeTransformation->setPosition(vec3(i-5, sin(radians((float) y + 10 * i)), 2.0));
-            mat4 mvp = renderer->GetCameraMatrix() * cubeTransformation->getTransformationMatrix();
+            cubeTransformation->setPosition(vec3(i-5, sin(radians((float) renderer->GetTime() * cubeSpeed + 10 * i)), 2.0));
+            mvp = renderer->GetCameraMatrix() * cubeTransformation->getTransformationMatrix();
             mesh2->Draw(renderer, &mvp);
             
         }
+
+        mvp = renderer->GetCameraMatrix() * chunkPos->getTransformationMatrix();
+        chunk->GetMesh()->Draw(renderer, &mvp);
+
+        std::cout << "FPS : " << (int ) (1 / deltaTime) << std::endl;
         
         /* Swap front and back buffers */
         renderer->SwapBuffers();

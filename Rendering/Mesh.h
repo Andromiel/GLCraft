@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <vector>
 #include "../GameStructure/SpaceIdentity.h"
-#include "VertexBuffer.h"
+#include "VertexBuffers.h"
 #include "IndexBuffer.h"
 #include "Renderer.h"
 
@@ -13,16 +13,16 @@ class Mesh
 public:
 	Mesh();
 	~Mesh();
-	void setVertices(vector<float> vertices);
-	void setVertices(vector<float> vertices, VertexBufferLayout* layout);
-	void setIndices(vector<unsigned int> indices);
+	void setVertices(vector<vec3>* vertices);
+	void setIndices(vector<unsigned int>* indices);
 	void Draw(Renderer* renderer, mat4* transformation);
 	void Draw(Renderer* renderer);
 
 private:
-	vector<float> vertices;
+	vector<vec3> verticesPos;
+	unsigned int verticesPosVBO;
 	vector<unsigned int> indices;
-	VertexBuffer* vertexBuffer;
+	VertexBuffers* vertexBuffers;
 	IndexBuffer* indexBuffer;
 };
 

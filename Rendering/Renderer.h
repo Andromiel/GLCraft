@@ -23,6 +23,8 @@ private:
 
     std::vector<unsigned int> _vaos;
     mat4 _cameraMatrix;
+    double previousTime;
+    double deltaTime;
 public:
 	Renderer(int width, int height);
     Renderer(const Renderer&) = delete;
@@ -40,6 +42,8 @@ public:
     void ResetUniform(std::string name, void* data);
     void SwapBuffers();
     void PollEvents();
+    double GetFrameDeltaTime();
+    double GetTime();
 
 
 };

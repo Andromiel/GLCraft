@@ -9,18 +9,18 @@ VertexBufferLayout::~VertexBufferLayout() {
 }
 
 template<>
-void VertexBufferLayout::Push<int>(int count) {
-	_layout.push_back(LayoutElement(count, GL_INT));
+void VertexBufferLayout::Push<int>(int count, unsigned int vboToBind) {
+	_layout.push_back(LayoutElement(count, GL_INT, vboToBind));
 	_stride += GetSize(GL_INT) * count;
 }
 template<>
-void VertexBufferLayout::Push<float>(int count) {
-	_layout.push_back(LayoutElement(count, GL_FLOAT));
+void VertexBufferLayout::Push<float>(int count, unsigned int vboToBind) {
+	_layout.push_back(LayoutElement(count, GL_FLOAT, vboToBind));
 	_stride += GetSize(GL_FLOAT) * count;
 }
 template<>
-void VertexBufferLayout::Push<unsigned int>(int count) {
-	_layout.push_back(LayoutElement(count, GL_UNSIGNED_INT));
+void VertexBufferLayout::Push<unsigned int>(int count, unsigned int vboToBind) {
+	_layout.push_back(LayoutElement(count, GL_UNSIGNED_INT, vboToBind));
 	_stride += GetSize(GL_UNSIGNED_INT) * count;
 }
 
