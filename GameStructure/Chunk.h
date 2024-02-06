@@ -6,8 +6,8 @@
 #include "Orientation.h"
 #include "../Rendering/Mesh.h"
 
-#define CHUNKSIZE 16
-#define CHUNKHEIGHT 256
+#define CHUNKSIZE 128
+#define CHUNKHEIGHT 64
 
 struct Chunk {
 private:
@@ -15,8 +15,8 @@ private:
 	Mesh* mesh;
 	bool IsValidCoordinates(ivec3 pos);
 	bool IsTouchingChunk(ivec3 pos);
-	void GenerateBlockMesh(std::vector<vec3>* vertices, std::vector<unsigned int>* indices, ivec3 pos);
-	void GenerateBlockMeshFace(std::vector<vec3>* vertices, std::vector<unsigned int>* indices, ivec3 pos, Orientation orientation);
+	void GenerateBlockMesh(std::vector<vec3>* vertices, std::vector<unsigned int>* indices, std::vector<vec3>* normals, ivec3 pos);
+	void GenerateBlockMeshFace(std::vector<vec3>* vertices, std::vector<unsigned int>* indices, std::vector<vec3>* normals, ivec3 pos, Orientation orientation);
 
 public:
 	Chunk();

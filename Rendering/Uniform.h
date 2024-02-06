@@ -6,7 +6,10 @@
 
 #include <glm/mat4x4.hpp> // glm::mat4
 
-enum class UNIFORM_TYPE { MAT4 = 0 };
+enum class UNIFORM_TYPE { 
+	MAT4,
+	VEC3
+};
 
 class Uniform {
 private:

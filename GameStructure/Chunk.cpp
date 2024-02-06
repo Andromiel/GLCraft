@@ -15,21 +15,22 @@ bool Chunk::IsTouchingChunk(ivec3 pos)
 	return pos.x >= -1 && pos.y >= -1 && pos.z >= -1 && pos.x < CHUNKSIZE + 1 && pos.z < CHUNKSIZE + 1 && pos.y < CHUNKHEIGHT + 1;
 }
 
-void Chunk::GenerateBlockMesh(std::vector<vec3>* vertices, std::vector<unsigned int>* indices, ivec3 pos)
+void Chunk::GenerateBlockMesh(std::vector<vec3>* vertices, std::vector<unsigned int>* indices, std::vector<vec3>* normals, ivec3 pos)
 {
 	Block blockRendering = GetBlockAt(pos);
 	if (!blockRendering.IsVisible()) return;
-	GenerateBlockMeshFace(vertices, indices, pos, FORWARD);
-	GenerateBlockMeshFace(vertices, indices, pos, BACKWARD);
-	GenerateBlockMeshFace(vertices, indices, pos, RIGHT);
-	GenerateBlockMeshFace(vertices, indices, pos, LEFT);
-	GenerateBlockMeshFace(vertices, indices, pos, UP);
-	GenerateBlockMeshFace(vertices, indices, pos, DOWN);
+	GenerateBlockMeshFace(vertices, indices, normals, pos, FORWARD);
+	GenerateBlockMeshFace(vertices, indices, normals, pos, BACKWARD);
+	GenerateBlockMeshFace(vertices, indices, normals, pos, RIGHT);
+	GenerateBlockMeshFace(vertices, indices, normals, pos, LEFT);
+	GenerateBlockMeshFace(vertices, indices, normals, pos, UP);
+	GenerateBlockMeshFace(vertices, indices, normals, pos, DOWN);
 }
 
-void Chunk::GenerateBlockMeshFace(std::vector<vec3>* vertices, std::vector<unsigned int>* indices, ivec3 pos, Orientation orientation)
+void Chunk::GenerateBlockMeshFace(std::vector<vec3>* vertices, std::vector<unsigned int>* indices, std::vector<vec3>* normals, ivec3 pos, Orientation orientation)
 {
-	Block opositeBlock = GetBlockAt(pos + GetOffset(orientation)); //todo: Change GetBlockAt to get block on neighbour chunk
+	ivec3 dir = GetOffset(orientation);
+	Block opositeBlock = GetBlockAt(pos + dir); //todo: Change GetBlockAt to get block on neighbour chunk
 	if (opositeBlock.IsVisible()) return;
 	unsigned int size = vertices->size();
 	switch (orientation) {
@@ -53,6 +54,7 @@ void Chunk::GenerateBlockMeshFace(std::vector<vec3>* vertices, std::vector<unsig
 		break;
 	}
 	indices->insert(indices->end(), { size + 0, size + 1, size + 2, size + 3, size + 2, size + 1 });
+	normals->insert(normals->end(), { dir, dir, dir, dir });
 }
 
 Chunk::Chunk()
@@ -86,7 +88,7 @@ Block Chunk::GetBlockAt(ivec3 pos)
 		return BlockRegistry::BLOCK_REGISTRY->GetFromRegistry(BlockRegistry::AIR);
 	}
 
-	short blockId = _blocks.at(pos.x * CHUNKSIZE * CHUNKSIZE + pos.z * CHUNKSIZE + pos.y);
+	short blockId = _blocks.at(pos.x * CHUNKSIZE * CHUNKHEIGHT + pos.z * CHUNKHEIGHT + pos.y);
 	return BlockRegistry::BLOCK_REGISTRY->GetFromRegistry(blockId);
 }
 
@@ -94,6 +96,7 @@ void Chunk::GenerateMesh()
 {
 	std::vector<vec3>* vertices = new std::vector<vec3>;
 	std::vector<unsigned int>* indices = new std::vector<unsigned int>;
+	std::vector<vec3>* normals = new std::vector<vec3>;
 
 	for (int x = 0; x < CHUNKSIZE; x++)
 	{
@@ -101,12 +104,15 @@ void Chunk::GenerateMesh()
 		{
 			for (int y = 0; y < CHUNKHEIGHT; y++)
 			{
-				GenerateBlockMesh(vertices, indices, ivec3(x, y, z));
+				GenerateBlockMesh(vertices, indices, normals, ivec3(x, y, z));
 			}
 		}
 	}
 	
 	mesh->setVertices(vertices);
+	VertexBuffers* vertexBuffers = mesh->GetVertexBuffers();
+	std::vector<float>* flattenNormals = reinterpret_cast<std::vector<float>*>(normals);
+	vertexBuffers->BufferData(flattenNormals->size(), flattenNormals->data(), vertexBuffers->AddBuffer<float>(3));
 	mesh->setIndices(indices);
 }
 

@@ -14,6 +14,7 @@ public:
 	Mesh();
 	~Mesh();
 	void setVertices(vector<vec3>* vertices);
+	VertexBuffers* GetVertexBuffers();
 	void setIndices(vector<unsigned int>* indices);
 	void Draw(Renderer* renderer, mat4* transformation);
 	void Draw(Renderer* renderer);

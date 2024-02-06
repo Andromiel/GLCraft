@@ -20,6 +20,11 @@ void Mesh::setVertices(vector<vec3>* vertices)
 	vertexBuffers->BufferData<float>(verticesFlatten->size(), verticesFlatten->data(), verticesPosVBO);
 }
 
+VertexBuffers* Mesh::GetVertexBuffers()
+{
+	return vertexBuffers;
+}
+
 void Mesh::setIndices(vector<unsigned int>* indices)
 {
 	indexBuffer->BufferData(indices->size(), indices->data());

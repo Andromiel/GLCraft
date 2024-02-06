@@ -44,6 +44,7 @@ Renderer::Renderer(int width, int height) {
     }
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS);
 
     _window = window;

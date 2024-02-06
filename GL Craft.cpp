@@ -136,6 +136,11 @@ int main(void)
     chunk->GenerateMesh();
 
     SpaceIdentity* chunkPos = new SpaceIdentity();
+    chunkPos->setPosition(vec3(0, -4, 0));
+    chunkPos->setScale(vec3(0.1f, 0.1f, 0.1f));
+
+    vec3 sunDir = quat(vec3(-45, 45, 0)) * vec3(0, 0, 1);
+    renderer->LinkAndSetUniform(UNIFORM_TYPE::VEC3, "sunDir", &sunDir);
 
     /* Loop until the user closes the window */
     while (!renderer->CloseWindow())

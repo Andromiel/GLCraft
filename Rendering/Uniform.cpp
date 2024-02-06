@@ -25,6 +25,9 @@ void Uniform::SetUniform(void* data) {
 		case UNIFORM_TYPE::MAT4:
 			glUniformMatrix4fv(_location, 1, GL_FALSE, (float*)data);
 			break;
+		case UNIFORM_TYPE::VEC3:
+			glUniform3fv(_location, 1, (float*) data);
+			break;
 	}
 }
 
