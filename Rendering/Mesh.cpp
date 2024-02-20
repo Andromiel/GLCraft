@@ -32,6 +32,7 @@ void Mesh::setIndices(vector<unsigned int>* indices)
 
 void Mesh::Draw(Renderer* renderer, mat4* transformation)
 {
+	if (indexBuffer->GetSize() == 0) return;
 	vertexBuffers->BindLayout();
 	indexBuffer->Bind();
 	renderer->ResetUniform("matrix", transformation);

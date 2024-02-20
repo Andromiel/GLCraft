@@ -15,6 +15,8 @@
 
 #include <iostream>
 
+#include "Profiler/Profiler.h"
+
 #include "Rendering/Shader.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/VertexBuffers.h"
@@ -25,6 +27,7 @@
 #include "GameStructure/BlockRegistry.h"
 #include "GameStructure/WorldGenerator.h"
 #include "GameStructure/Chunk.h"
+#include "GameStructure/Chunkmap.h"
 
 
 
@@ -33,7 +36,10 @@ const int HEIGHT = 700;
 
 int main(void)
 {
+    Profiler::PROFILER.Push("Application");
+    Profiler::PROFILER.Push("Renderer Init");
     Renderer* renderer = new Renderer(WIDTH, HEIGHT);
+    Profiler::PROFILER.Pop();
     
     GLuint vao;
     glGenVertexArrays(1, &vao);
@@ -131,31 +137,35 @@ int main(void)
     double orientationX = 0, orientationY = 0;
     int y = 0;
 
-    Chunk* chunk = new Chunk();
-    chunk->FillChunk(WorldGenerator::Generate);
-    chunk->GenerateMesh();
-
-    SpaceIdentity* chunkPos = new SpaceIdentity();
-    chunkPos->setPosition(vec3(0, -4, 0));
-    chunkPos->setScale(vec3(0.1f, 0.1f, 0.1f));
+    Chunkmap* chunkmap = new Chunkmap();
+    Profiler::PROFILER.Push("chunk creation");
+    for (int i = 0; i < 16; i++)
+    {
+        for (int j = 0; j < 16; j++)
+        {
+            chunkmap->LoadChunk(ivec2(i, j));
+        }
+    }
+    Profiler::PROFILER.Pop();
 
     vec3 sunDir = quat(vec3(-45, 45, 0)) * vec3(0, 0, 1);
     renderer->LinkAndSetUniform(UNIFORM_TYPE::VEC3, "sunDir", &sunDir);
 
+    //camera->setScale(vec3(5, 5, 5));
     /* Loop until the user closes the window */
     while (!renderer->CloseWindow())
     {
         double deltaTime = renderer->GetFrameDeltaTime();
 
         y++;
-        float movingspeed = -1.0f * deltaTime;
+        float movingspeed = 1.0f * deltaTime;
         if (glfwGetKey(renderer->GetWindow(), GLFW_KEY_W) == GLFW_PRESS) {
             //center = center + glm::vec3(eye) * 0.001f;
-            camera->moveLocal(vec3(0, 0, movingspeed));
+            camera->moveLocal(vec3(0, 0, -movingspeed));
         }
         if (glfwGetKey(renderer->GetWindow(), GLFW_KEY_S)) {
             //center = center + glm::vec3(eye) * -0.001f;
-            camera->moveLocal(vec3(0, 0, -movingspeed));
+            camera->moveLocal(vec3(0, 0, movingspeed));
         }
         if (glfwGetKey(renderer->GetWindow(), GLFW_KEY_A)) {
             //center = center + glm::vec3(-eye.z, eye.y, eye.x) * -0.001f;
@@ -199,8 +209,7 @@ int main(void)
             
         }
 
-        mvp = renderer->GetCameraMatrix() * chunkPos->getTransformationMatrix();
-        chunk->GetMesh()->Draw(renderer, &mvp);
+        chunkmap->Render(renderer);
 
         std::cout << "FPS : " << (int ) (1 / deltaTime) << std::endl;
         
@@ -211,5 +220,8 @@ int main(void)
     }
 
     glfwTerminate();
+    Profiler::PROFILER.Pop();
+    Frame frame = Profiler::PROFILER.ExtractFrame();
+    frame.Show();
     return 0;
 }

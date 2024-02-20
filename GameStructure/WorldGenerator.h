@@ -1,12 +1,13 @@
 #pragma once
 
 #include <glm/vec3.hpp>
+#include "Chunk.h"
 
 class WorldGenerator
 {
 private:
 	static const float threshold;
 public:
-	static short Generate(glm::vec3 pos);
+	static void Generate(short* blocksArray, glm::ivec2 chunkCoords);
 };
 

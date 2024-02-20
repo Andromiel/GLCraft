@@ -13,15 +13,15 @@ SpaceIdentity::SpaceIdentity() {
 }
 
 void SpaceIdentity::setPosition(vec3 position) {
-	_position = position * vec3(1, 1, -1);
+	_position = position;
 }
 
 void SpaceIdentity::moveAbsolute(vec3 position) {
-	_position += position * vec3(1, 1, -1);
+	_position += position;
 }
 
 void SpaceIdentity::moveLocal(vec3 position) {
-	_position += (position * vec3(1, 1, -1) * _scale) * _rotation;
+	_position += position * _rotation;
 }
 
 void SpaceIdentity::setRotation(vec3 rotation) {
@@ -56,6 +56,6 @@ vec3 SpaceIdentity::getScale() {
 }
 
 mat4 SpaceIdentity::getTransformationMatrix() {
-	return mat4_cast(_rotation) * glm::translate(mat4(1), _position) * glm::scale(mat4(1), _scale);
+	return glm::translate(mat4(1), _position) * mat4_cast(_rotation) * glm::scale(mat4(1), _scale);
 }
 

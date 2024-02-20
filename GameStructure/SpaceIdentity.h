@@ -22,7 +22,7 @@ public:
 	vec3 getPosition();
 	quat getRotation();
 	vec3 getScale();
-	mat4 getTransformationMatrix();
+	virtual mat4 getTransformationMatrix();
 protected:
 	vec3 _position;
 	quat _rotation;

@@ -25,3 +25,8 @@ void Camera::setFieldOfView(float FOV) {
 mat4 Camera::getProjectionMatrix() {
 	return glm::perspective(_fov, _aspect, _near, _far);
 }
+
+mat4 Camera::getTransformationMatrix()
+{
+	return mat4_cast(_rotation) * glm::scale(mat4(1), _scale * vec3(1, 1, -1)) * glm::translate(mat4(1), _position * vec3(-1, -1, 1));
+}

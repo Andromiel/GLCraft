@@ -1,13 +1,14 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
+#include "../Profiler/Profiler.h"
 
 template<typename T>
 class Registry
 {
 private:
 	short nextAvailableId = 0;
-	std::map<short, T> registry;
+	std::unordered_map<short, T> registry;
 
 	std::pair<short, T> GetPair(short id, T value)
 	{
@@ -29,6 +30,12 @@ public:
 
 	T GetFromRegistry(short id)
 	{
-		return registry.find(id)->second;
+		auto value = registry.find(id);
+		if (value != registry.end()) {
+			return value->second;
+		}
+		else {
+			return registry.begin()->second;
+		}
 	}
 };

@@ -45,6 +45,7 @@ Renderer::Renderer(int width, int height) {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glFrontFace(GL_CW);
     glDepthFunc(GL_LESS);
 
     _window = window;
@@ -99,7 +100,6 @@ void Renderer::LinkAndSetUniform(UNIFORM_TYPE type, std::string name, void* data
     _uniforms[name] = new Uniform();
     _uniforms[name]->LinkUniform(name, type, _shaders);
     _uniforms[name]->SetUniform(data);
-    std::cout << "setted" << std::endl;
 }
 
 void Renderer::ResetUniform(std::string name, void* data)

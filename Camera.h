@@ -11,6 +11,7 @@ public:
 	Camera(int camWidth, int camHeight);
 	void setFieldOfView(float FOV);
 	mat4 getProjectionMatrix();
+	virtual mat4 getTransformationMatrix() override;
 private:
 	float _aspect;
 	float _near;

@@ -133,6 +133,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib;$(SolutionDir)Dependencies\GLEW\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <Profile>false</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -156,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Profiler\Frame.cpp" />
     <ClCompile Include="GameStructure\Block.cpp" />
     <ClCompile Include="GameStructure\BlockRegistry.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -164,6 +166,7 @@
     <ClCompile Include="GameStructure\World.cpp" />
     <ClCompile Include="GL Craft.cpp" />
     <ClCompile Include="GameStructure\Registry.cpp" />
+    <ClCompile Include="Profiler\Profiler.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\IndexBuffer.cpp" />
     <ClCompile Include="Rendering\Renderer.cpp" />
@@ -181,6 +184,7 @@
     <None Include="shaders.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Profiler\Frame.h" />
     <ClInclude Include="GameStructure\BlockRegistry.h" />
     <ClInclude Include="GameStructure\Block.h" />
     <ClInclude Include="Camera.h" />
@@ -192,6 +196,7 @@
     <ClInclude Include="GameStructure\World.h" />
     <ClInclude Include="GameStructure\Registry.h" />
     <ClInclude Include="GameStructure\Orientation.h" />
+    <ClInclude Include="Profiler\Profiler.h" />
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\IndexBuffer.h" />
     <ClInclude Include="Rendering\Renderer.h" />

@@ -9,15 +9,22 @@
 #include "glm/gtx/hash.hpp"
 
 #include "Chunk.h"
+#include "../Rendering/Renderer.h"
 
 struct Chunkmap {//coordinates are relative to chunks (for example (0, 0) or (57, -14) etc)
 private:
-	std::unordered_map<glm::ivec3, Chunk> _map;
+	std::unordered_map<glm::ivec2, Chunk*> _map;
 public:
 	Chunkmap();
 	~Chunkmap();
 
-	bool ChunkExist(glm::vec3 coords);
-	void CreateChunk(glm::ivec3 coords);
-	void DeleteChunk(glm::ivec3 coords);
+	bool IsChunkGenerated(glm::ivec2 coords);
+	bool IsChunkLoaded(glm::ivec2 coords);
+	void LoadChunk(glm::ivec2 coords);
+	void UnloadChunk(glm::ivec2 coords);
+	void Render(Renderer* renderer);
+private:
+	void CreateChunk(glm::ivec2 coords);
+	void SaveChunk(glm::ivec2 coords);
+	void LoadChunkFromSave(glm::ivec2 coords);
 };
