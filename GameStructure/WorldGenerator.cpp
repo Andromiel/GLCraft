@@ -15,8 +15,8 @@ void WorldGenerator::Generate(short* blocksArray, glm::ivec2 chunkCoords)
 			vec2 samplePoint = vec2(x + chunkCoords.x * CHUNKSIZE, z + chunkCoords.y * CHUNKSIZE);
 			float height = 0;
 			float amplitude = 0.5;
-			float frequency = 0.01f;
-			float persistence = 0.5f;
+			float frequency = 0.005f;
+			float persistence = 0.8f;
 			float lacunarity = 2;
 			float maxValue = 0;
 			for (int i = 0; i < 4; i++) // octaves

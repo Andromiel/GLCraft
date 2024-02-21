@@ -24,7 +24,7 @@ public:
 	~Chunk();
 
 	void FillChunk( void (*fillingFunc)(short* blocksArray, ivec2 chunkCoords));
-	Block GetBlockAt(ivec3 pos);
+	Block* GetBlockAt(ivec3 pos);
 	void GenerateMesh();
 	Mesh* GetMesh();
 

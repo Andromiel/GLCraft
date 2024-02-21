@@ -8,11 +8,11 @@ class Registry
 {
 private:
 	short nextAvailableId = 0;
-	std::unordered_map<short, T> registry;
+	std::unordered_map<short, T*> registry;
 
-	std::pair<short, T> GetPair(short id, T value)
+	std::pair<short, T*> GetPair(short id, T *value)
 	{
-		return std::pair<short, T>(id, value);
+		return std::pair<short, T*>(id, value);
 	}
 
 	short GetNextId()
@@ -21,14 +21,14 @@ private:
 	}
 
 public:
-	short Register(T value)
+	short Register(T *value)
 	{
 		short id = GetNextId();
 		registry.insert(GetPair(id, value));
 		return id;
 	}
 
-	T GetFromRegistry(short id)
+	T* GetFromRegistry(short id)
 	{
 		auto value = registry.find(id);
 		if (value != registry.end()) {
@@ -36,6 +36,15 @@ public:
 		}
 		else {
 			return registry.begin()->second;
+		}
+	}
+
+	Registry() {}
+
+	~Registry() {
+		typename std::unordered_map<short, T*>::iterator it;
+		for (it = registry.begin(); it != registry.end(); it++) {
+			delete it->second;
 		}
 	}
 };

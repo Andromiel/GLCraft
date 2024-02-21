@@ -18,8 +18,8 @@ bool Chunk::IsTouchingChunk(ivec3 pos)
 
 void Chunk::GenerateBlockMesh(std::vector<vec3>* vertices, std::vector<unsigned int>* indices, std::vector<vec3>* normals, ivec3 pos)
 {
-	Block blockRendering = GetBlockAt(pos);
-	if (!blockRendering.IsVisible()) return;
+	Block* blockRendering = GetBlockAt(pos);
+	if (!blockRendering->IsVisible()) return;
 	GenerateBlockMeshFace(vertices, indices, normals, pos, FORWARD);
 	GenerateBlockMeshFace(vertices, indices, normals, pos, BACKWARD);
 	GenerateBlockMeshFace(vertices, indices, normals, pos, RIGHT);
@@ -32,8 +32,8 @@ void Chunk::GenerateBlockMesh(std::vector<vec3>* vertices, std::vector<unsigned 
 void Chunk::GenerateBlockMeshFace(std::vector<vec3>* vertices, std::vector<unsigned int>* indices, std::vector<vec3>* normals, ivec3 pos, Orientation orientation)
 {
 	ivec3 dir = GetOffset(orientation);
-	Block opositeBlock = GetBlockAt(pos + dir);
-	if (opositeBlock.IsVisible()) {
+	Block* opositeBlock = GetBlockAt(pos + dir);
+	if (opositeBlock->IsVisible()) {
 		return;
 	}
 	unsigned int size = vertices->size();
@@ -79,14 +79,14 @@ void Chunk::FillChunk(void (*fillingFunc)(short* blocksArray, ivec2 chunkCoords)
 	Profiler::PROFILER.Pop();
 }
 
-Block Chunk::GetBlockAt(ivec3 pos)
+Block* Chunk::GetBlockAt(ivec3 pos)
 {
 	if (!IsValidCoordinates(pos)) {
-		return BlockRegistry::BLOCK_REGISTRY->GetFromRegistry(BlockRegistry::AIR);
+		return BlockRegistry::BLOCK_REGISTRY.GetFromRegistry(BlockRegistry::AIR);
 	}
 
 	short blockId = _blocks[GetFlattenIndices(pos)];
-	return BlockRegistry::BLOCK_REGISTRY->GetFromRegistry(blockId);
+	return BlockRegistry::BLOCK_REGISTRY.GetFromRegistry(blockId);
 }
 
 void Chunk::GenerateMesh()
